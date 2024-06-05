@@ -92,7 +92,7 @@ export default function FooterComp() {
           
         </div>
         <FooterDivider />
-        <div className="w-full sm:flex sm:items-center sm:justify-between">
+        <div className="w-full sm:flex sm:items-center sm:justify-betweenu">
         <FooterCopyright
               href="#"
               by="Hassan's Blog"
