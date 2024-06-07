@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    profilePicture: {
+        type: String,
+        default: "https://cdn.pixabay.com/photo/2024/01/17/17/54/owl-8515205_1280.png"
+    }
 }, {
     timestamps:true
 }
