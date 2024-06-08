@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from 'flowbite-react';
 import { AiFillGoogleCircle } from 'react-icons/ai';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
@@ -18,23 +17,31 @@ export default function OAuth() {
         provider.setCustomParameters({prompt: 'select_account'})
         try {
             const resultsFromGoogle = await signInWithPopup(auth, provider)
-            const res = await fetch('api/auth/google', {
+            const res = await fetch('/api/auth/google', {
                 method: 'POST',
-                headers: { 'content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: resultsFromGoogle.user.displayName,
                     email: resultsFromGoogle.user.email,
-                    googlePhotoUrl: resultsFromGoogle.user.photoURL
-                })
+                    googlePhotoUrl: resultsFromGoogle.user.photoURL,
+                }),
             })
-            const data = await res.json()
+            const contentType = res.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('invalide content-type. expected application/json')
+            }
+
+            const data = await res.json();
             if (res.ok) {
                 dispatch(signInSuccess(data))
                 navigate('/')
+
+            
+            }else {
+                console.error('server responded with an error:', data)
             }
-        }catch{
-            console.error();
-            console.log(error)
+        }catch (error) {
+            console.log(error);
         }
     }
   return (
