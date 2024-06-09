@@ -5,6 +5,7 @@ import { app } from '../firebase';
 import { useDispatch } from 'react-redux';
 import { signInSuccess } from '../redux/user/userSlice'
 import { useNavigate } from 'react-router-dom';
+import bcryptjs from 'bcryptjs'
 
 
 export default function OAuth() {
@@ -17,6 +18,7 @@ export default function OAuth() {
         provider.setCustomParameters({prompt: 'select_account'})
         try {
             const resultsFromGoogle = await signInWithPopup(auth, provider)
+            console.log(resultsFromGoogle)
             const res = await fetch('/api/auth/google', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
