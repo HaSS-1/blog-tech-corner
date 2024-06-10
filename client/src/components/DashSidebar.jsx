@@ -18,7 +18,7 @@ export default function DashSidebar() {
 
   }, [location.search])
   return (
-    <Sidebar>
+    <Sidebar className="w-full md:w-56">
         <Sidebar.Items>
             <Sidebar.ItemGroup>
                 <Link to='/dashboard?tab=profile'>
@@ -27,7 +27,7 @@ export default function DashSidebar() {
                     Profile
                 </Sidebar.Item>
                 </Link>
-                <Sidebar.Item icon={HiArrowSmRight} className='cursor-pointer hover:outline hover:text-pink-700'>
+                <Sidebar.Item icon={HiArrowSmRight} className='cursor-pointer hover:text-pink-500'>
                     Sign Out
                 </Sidebar.Item>
             </Sidebar.ItemGroup>
