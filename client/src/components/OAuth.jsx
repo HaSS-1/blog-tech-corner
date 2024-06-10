@@ -26,8 +26,11 @@ export default function OAuth() {
                     name: resultsFromGoogle.user.displayName,
                     email: resultsFromGoogle.user.email,
                     googlePhotoUrl: resultsFromGoogle.user.photoURL,
+                    
                 }),
+                
             })
+            console.log(resultsFromGoogle.user.photoURL)
             const contentType = res.headers.get('content-type');
             if (!contentType || !contentType.includes('application/json')) {
                 throw new Error('invalide content-type. expected application/json')
