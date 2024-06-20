@@ -1,9 +1,10 @@
-import { Button, TextInput } from 'flowbite-react'
+import { Alert, Button, TextInput } from 'flowbite-react'
 import {useEffect, useRef, useState} from 'react'
 import {useSelector} from 'react-redux'
 import {getDownloadURL, getStorage, uploadBytesResumable, ref} from 'firebase/storage'
 import {app} from '../firebase'
-
+import { CircularProgressbar } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css'
 export default function DashProfile() {
     const {currentUser} = useSelector(state => state.user);
     const filePickerRef = useRef();
@@ -27,7 +28,7 @@ export default function DashProfile() {
     }, [imageFile]);
         const uploadImage = async () => {
             console.log('uploading ...');
-
+            setImageFileUploadError(null);
             const storage = getStorage(app);
             const fileName = new Date().getTime() + imageFile.name;
             const storageRef = ref(storage, fileName);
@@ -39,7 +40,10 @@ export default function DashProfile() {
                         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                         setImageFileUploadProgress(progress.toFixed(0))
                 },(error) => {
-                    setImageFileUploadError('Could not upload image...')
+                    setImageFileUploadError('Could not upload image...');
+                    setImageFileUploadProgress(null);
+                    setImageFile(null);
+                    setImageFileUrl(null)
                     console.log('')
                 },
                 () => {
@@ -55,11 +59,36 @@ export default function DashProfile() {
         <h1 className='font-semibold text-2xl text-center my-7 '>Profile</h1>
         <form className='flex flex-col gap-4'>
             <input type="file" accept='image/*' onChange={handleImageChange} ref={filePickerRef} hidden/>
-            <div className='self-center size-32 rounded-full cursor-pointer shadow-md overflow-hidden ring-8 ring-salte-500'
+            <div className='self-center relative size-32 rounded-full cursor-pointer shadow-md overflow-hidden'
             onClick={()=>filePickerRef.current.click()}>
-            <img src={imageFileUrl || currentUser.profilePicture} alt='user photo' className='rounded-full size-full object-cover  ' />
+
+                {imageFileUploadProgress && (
+                    <CircularProgressbar value={ imageFileUploadProgress || 0 } 
+                    text={`${imageFileUploadProgress}%`}
+                    strokeWidth={5}
+                    styles={{
+                        root:{
+                            width: '100%',
+                            height: '100%',
+                            position:'absolute',
+                            top:'0',
+                            left:'0'
+                        },
+                        path: {
+                            stroke: `rgba(62,152,199, ${imageFileUploadProgress / 100})`,
+                        }
+                    }}
+                    />
+                )}
+            <img src={imageFileUrl || currentUser.profilePicture} alt='user photo'
+             className={`rounded-full size-full object-cover border-8 border-[lightgray]
+             ${imageFileUploadProgress && imageFileUploadProgress < 100 && 'opacity-60'}`} />
         
             </div>
+            {imageFileUploadError && <Alert color='failure'>
+                {imageFileUploadError}
+            </Alert>}
+            
             <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username} />
             <TextInput type='email' id='' placeholder='email' defaultValue={currentUser.email} />
             <TextInput type='password' id='password' placeholder='password' />
