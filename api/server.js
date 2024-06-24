@@ -1,8 +1,9 @@
-import express, { response } from "express";
+import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv"
 import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
+import cookieParser from "cookie-parser";
 
 dotenv.config()
 
@@ -24,6 +25,8 @@ app.use(express.json())
 app.listen(PORT, HOST, () => {
     console.log(`Server is now running on --> http://${HOST}:${PORT}`)
 })
+
+app.use(cookieParser())
 
 app.use('/api/user', userRoutes)
 app.use('/api/auth', authRoutes)
