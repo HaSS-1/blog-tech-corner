@@ -9,7 +9,8 @@ export default function DashProfile() {
     const {currentUser} = useSelector(state => state.user);
     const filePickerRef = useRef();
     const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
-    const [imageFileUploadError, setImageFileUploadError] = useState(null)
+    const [imageFileUploadError, setImageFileUploadError] = useState(null);
+    const [formData, setFormDadat] = useState({})
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFile, setImageFile] = useState(null);
     console.log(imageFileUploadProgress, imageFileUploadError)
@@ -48,7 +49,8 @@ export default function DashProfile() {
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        setImageFileUrl(downloadURL)
+                        setImageFileUrl(downloadURL);
+                        setFormDadat({ ...formData, profilePicture: downloadURL });
                     })
                 }
             )
@@ -89,9 +91,9 @@ export default function DashProfile() {
                 {imageFileUploadError}
             </Alert>}
             
-            <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username} />
-            <TextInput type='email' id='' placeholder='email' defaultValue={currentUser.email} />
-            <TextInput type='password' id='password' placeholder='password' />
+            <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username} onChange={handleChange} />
+            <TextInput type='email' id='' placeholder='email' defaultValue={currentUser.email} onChange={handleChange} />
+            <TextInput type='password' id='password' placeholder='password' onChange={handleChange} />
             <Button type='submit' gradientDuoTone='purpleToPink'> Submit </Button>
            </form>
     </div>
