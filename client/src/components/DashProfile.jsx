@@ -1,4 +1,4 @@
-import { Alert, Button, TextInput } from "flowbite-react";
+import { Alert, Button, Modal, ModalBody, TextInput } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { app } from "../firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 export default function DashProfile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -29,6 +30,7 @@ export default function DashProfile() {
   const [formData, setFormDadat] = useState({});
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
+  const [showModal, setShowModal] = useState(false)
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -185,7 +187,7 @@ export default function DashProfile() {
         </Button>
       </form>
       <div className="text-red-500 flex justify-between mt-5">
-        <span className="cursor-pointer">Delete Account</span>
+        <span onClick={()=> setShowModal(true)} className="cursor-pointer">Delete Account</span>
         <span className="cursor-pointer">Sign Out</span>
       </div>
       {updateUserSuccess && (
@@ -203,6 +205,14 @@ export default function DashProfile() {
           {error}
         </Alert>
       )}
+      <Modal show={showModal} onClose={() => setShowModal(false)} popup size='md'>
+        <Modal.Header/>
+        <ModalBody>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="size:14"/>
+          </div>
+        </ModalBody>
+      </Modal>
     </div>
   );
 }
