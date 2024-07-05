@@ -11,6 +11,9 @@ import {
   updateStart,
   updateFailure,
   updateSuccess,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { app } from "../firebase";
@@ -113,6 +116,25 @@ export default function DashProfile() {
       setUpdateUserError(error.message);
     }
   };
+
+  const handleDeleteUser = async () => {
+    setShowModal(false)
+    try {
+      dispatch(deleteUserStart())
+    
+      const res = await fetch(`api/user/delete/${currentUser._id}`,
+      {method: 'DELETE',
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      dispatch(deleteUserFailure(data.message))
+    }else {
+      dispatch(deleteUserSuccess(data))
+    }
+  }catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  }
   return (
     <div className="max-w-lg mx-auto w-full p-3">
       <h1 className="font-semibold text-2xl text-center my-7 ">Profile</h1>
@@ -209,7 +231,18 @@ export default function DashProfile() {
         <Modal.Header/>
         <ModalBody>
           <div className="text-center">
-            <HiOutlineExclamationCircle className="size:14"/>
+            <HiOutlineExclamationCircle className="h-14 w-14 mb-4 mx-auto
+             text-gray-400 dark:text-gray-200"/>
+             <h3 className="text-red-600 dark:text-red-500 mb-5 text-lg">
+              Are you sure you want to delete your account ?</h3>
+          </div>
+          <div className="flex justify-between">
+          <Button color='failure' onClick={handleDeleteUser}>
+Yes, I'm sure
+</Button>
+<Button color='success' onClick={() => setShowModal(false)}>
+No, Cancel
+</Button>
           </div>
         </ModalBody>
       </Modal>
