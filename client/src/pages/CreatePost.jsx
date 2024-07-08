@@ -26,7 +26,10 @@ export default function CreatePost() {
         <Button type='button' gradientDuoTone='purpleToBlue' size='sm'
         outline>Upload Image </Button>
        </div>
-       <ReactQuill theme="snow" className='h-72 mb-12' placeholder='Write somthing...' />
+       <ReactQuill theme="snow" className='h-72 mb-12' placeholder='Write somthing...' required />
+       <Button type='submit' gradientDuoTone='purpleToPink'>
+        Publish
+       </Button>
     </form>
     </div>
   )
